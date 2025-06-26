@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toyota Hilux 2018 Diesel | OUEST DEAL</title>
+    <style>
+        /* CSS dédié à la fiche produit */
+        :root {
+            --primary: #FF6B00;
+            --secondary: #005F73;
+            --light: #f8f9fa;
+            --dark: #212529;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        
+        .product-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+        
+        .product-header {
+            background-color: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-bottom: 1.5rem;
+        }
+        
+        .product-title {
+            color: var(--secondary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .product-ref {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+        
+        .product-status {
+            display: inline-block;
+            background-color: var(--primary);
+            color: white;
+            padding: 0.3rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .product-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+        
+        .gallery {
+            background-color: white;
+            border-radius: 10px;
+            padding: 1rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        .main-image {
+            width: 100%;
+            height: 400px;
+            object-fit: contain;
+            margin-bottom: 1rem;
+            border: 1px solid #eee;
+            border-radius: 5px;
+        }
+        
+        .thumbnail-container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.5rem;
+        }
+        
+        .thumbnail {
+            width: 100%;
+            height: 80px;
+            object-fit: cover;
+            cursor: pointer;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            transition: border 0.3s;
+        }
+        
+        .thumbnail:hover {
+            border-color: var(--primary);
+        }
+        
+        .product-details {
+            background-color: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        .price-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .current-price {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary);
+            margin-right: 1rem;
+        }
+        
+        .original-price {
+            text-decoration: line-through;
+            color: #999;
+        }
+        
+        .badge {
+            background-color: #28a745;
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            margin-left: auto;
+        }
+        
+        .key-features {
+            margin: 1.5rem 0;
+        }
+        
+        .feature {
+            display: flex;
+            margin-bottom: 0.8rem;
+        }
+        
+        .feature-icon {
+            color: var(--primary);
+            margin-right: 0.8rem;
+            width: 20px;
+            text-align: center;
+        }
+        
+        .action-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        
+        .btn {
+            padding: 1rem;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.3s;
+        }
+        
+        .btn:hover {
+            opacity: 0.9;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .btn-secondary {
+            background-color: var(--secondary);
+            color: white;
+        }
+        
+        .btn-icon {
+            margin-right: 0.5rem;
+        }
+        
+        .specs-container {
+            background-color: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-top: 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        .specs-title {
+            color: var(--secondary);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .specs-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        
+        .spec-item {
+            margin-bottom: 1rem;
+        }
+        
+        .spec-label {
+            font-weight: bold;
+            color: #555;
+        }
+        
+        .seller-info {
+            background-color: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-top: 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        .seller-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .seller-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 1rem;
+            border: 2px solid var(--primary);
+        }
+        
+        .seller-rating {
+            color: #FFC107;
+            margin-top: 0.3rem;
+        }
+        
+        .seller-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .stat-item {
+            text-align: center;
+            padding: 0.8rem;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+        }
+        
+        .stat-value {
+            font-weight: bold;
+            color: var(--primary);
+        }
+        
+        .stat-label {
+            font-size: 0.8rem;
+            color: #666;
+        }
+        
+        @media (max-width: 768px) {
+            .product-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .main-image {
+                height: 300px;
+            }
+            
+            .action-buttons {
+                grid-template-columns: 1fr;
+            }
+            
+            .specs-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .seller-stats {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="product-container">
+        <!-- En-tête du produit -->
+        <div class="product-header">
+            <h1 class="product-title">Toyota Hilux 2018 Diesel 4x4</h1>
+            <div class="product-ref">Réf: #HILUX-2018-OUAGA</div>
+            <span class="product-status">Disponible</span>
+        </div>
+        
+        <!-- Grille principale -->
+        <div class="product-grid">
+            <!-- Galerie photos -->
+            <div class="gallery">
+                <img id="mainImage" src="https://acnews.blob.core.windows.net/imgnews/large/NAZ_bef02fa6e8ef4ec78fc0f3ca5e8090da.jpg" alt="Toyota Hilux 2018" class="main-image">
+                <div class="thumbnail-container">
+                    <img src="https://www.elcarrocolombiano.com/wp-content/uploads/2017/11/20171114-TOYOTA-HILUX-2018-01.jpg.webp" alt="Vue avant" class="thumbnail" onclick="changeImage(this)">
+                    <img src="https://via.placeholder.com/200x150?text=Arrière" alt="Vue arrière" class="thumbnail" onclick="changeImage(this)">
+                    <img src="https://via.placeholder.com/200x150?text=Intérieur" alt="Intérieur" class="thumbnail" onclick="changeImage(this)">
+                    <img src="https://via.placeholder.com/200x150?text=Moteur" alt="Moteur" class="thumbnail" onclick="changeImage(this)">
+                </div>
+            </div>
+            
+            <!-- Détails et achat -->
+            <div class="product-details">
+                <div class="price-container">
+                    <div class="current-price">8 500 000 XOF</div>
+                    <div class="original-price">9 200 000 XOF</div>
+                    <span class="badge">7% de réduction</span>
+                </div>
+                
+                <div class="key-features">
+                    <div class="feature">
+                        <div class="feature-icon"><i class="fas fa-tachometer-alt"></i></div>
+                        <div>85 000 km</div>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon"><i class="fas fa-gas-pump"></i></div>
+                        <div>Diesel - 7.5L/100km</div>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon"><i class="fas fa-car"></i></div>
+                        <div>4x4 - Boîte automatique</div>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon"><i class="fas fa-paint-brush"></i></div>
+                        <div>Couleur : Blanc nacré</div>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon"><i class="fas fa-calendar-alt"></i></div>
+                        <div>Mise en circulation : Mars 2018</div>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon"><i class="fas fa-map-marker-alt"></i></div>
+                        <div>Localisation : Ouagadougou, Secteur 15</div>
+                    </div>
+                </div>
+                
+                <div class="action-buttons">
+                    <button class="btn btn-primary">
+                        <i class="fas fa-phone-alt btn-icon"></i> Appeler maintenant
+                    </button>
+                    <button class="btn btn-secondary">
+                        <i class="fab fa-whatsapp btn-icon"></i> WhatsApp
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Spécifications techniques -->
+        <div class="specs-container">
+            <h2 class="specs-title">Spécifications Techniques</h2>
+            <div class="specs-grid">
+                <div class="spec-item">
+                    <div class="spec-label">Marque/Modèle</div>
+                    <div>Toyota Hilux 2.4 D-4D Invincible</div>
+                </div>
+                <div class="spec-item">
+                    <div class="spec-label">Type de carburant</div>
+                    <div>Diesel</div>
+                </div>
+                <div class="spec-item">
+                    <div class="spec-label">Boîte de vitesse</div>
+                    <div>Automatique 6 rapports</div>
+                </div>
+                <div class="spec-item">
+                    <div class="spec-label">Puissance</div>
+                    <div>150 ch / 400 Nm</div>
+                </div>
+                <div class="spec-item">
+                    <div class="spec-label">Nombre de portes</div>
+                    <div>5 portes</div>
+                </div>
+                <div class="spec-item">
+                    <div class="spec-label">Capacité du réservoir</div>
+                    <div>80 litres</div>
+                </div>
+                <div class="spec-item">
+                    <div class="spec-label">Climatisation</div>
+                    <div>Double zone automatique</div>
+                </div>
+                <div class="spec-item">
+                    <div class="spec-label">Options</div>
+                    <div>Caméra de recul, Régulateur de vitesse, Sièges cuir</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Historique et garantie -->
+        <div class="specs-container">
+            <h2 class="specs-title">Historique & Garantie</h2>
+            <div class="specs-grid">
+                <div class="spec-item">
+                    <div class="spec-label">Nombre de propriétaires</div>
+                    <div>1 seul propriétaire</div>
+                </div>
+                <div class="spec-item">
+                    <div class="spec-label">Origine</div>
+                    <div>Importation Europe (Allemagne)</div>
+                </div>
+                <div class="spec-item">
+                    <div class="spec-label">Dernière révision</div>
+                    <div>Janvier 2024 (facture disponible)</div>
+                </div>
+                <div class="spec-item">
+                    <div class="spec-label">Contrôle technique</div>
+                    <div>Valide jusqu'en décembre 2024</div>
+                </div>
+                <div class="spec-item">
+                    <div class="spec-label">Accidents</div>
+                    <div>Aucun accident déclaré</div>
+                </div>
+                <div class="spec-item">
+                    <div class="spec-label">Garantie</div>
+                    <div>6 mois moteur/boîte offerte</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Vendeur -->
+        <div class="seller-info">
+            <div class="seller-header">
+                <img src="https://via.placeholder.com/150?text=Profil" alt="Vendeur" class="seller-avatar">
+                <div>
+                    <h3>Auto Import SA</h3>
+                    <div class="seller-rating">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star-half-alt"></i>
+                        <span>(24 avis)</span>
+                    </div>
+                </div>
+            </div>
+            <p>Concessionnaire automobile agréé depuis 2010. Spécialiste des véhicules 4x4 et utilitaires.</p>
+            <div class="seller-stats">
+                <div class="stat-item">
+                    <div class="stat-value">98%</div>
+                    <div class="stat-label">Clients satisfaits</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">72h</div>
+                    <div class="stat-label">Livraison moyenne</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">150+</div>
+                    <div class="stat-label">Véhicules vendus</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">24/7</div>
+                    <div class="stat-label">Assistance</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Changement d'image principale
+        function changeImage(element) {
+            document.getElementById('mainImage').src = element.src;
+        }
+        
+        // Interaction avec les boutons
+        document.addEventListener('DOMContentLoaded', function() {
+            const callBtn = document.querySelector('.btn-primary');
+            const whatsappBtn = document.querySelector('.btn-secondary');
+            
+            callBtn.addEventListener('click', function() {
+                alert('Contactez le vendeur au +226 XX XX XX XX');
+            });
+            
+            whatsappBtn.addEventListener('click', function() {
+                window.open('https://wa.me/226XXXXXXXX?text=Je%20suis%20intéressé%20par%20le%20Toyota%20Hilux%202018%20(réf:%20HILUX-2018-OUAGA)');
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Véhicules | OUEST DEAL</title>
+    <style>
+        :root {
+            --primary: #FF6B00;
+            --secondary: #005F73;
+            --light: #f8f9fa;
+            --dark: #212529;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            color: var(--secondary);
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .filter-buttons {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+            gap: 10px;
+        }
+        
+        .filter-btn {
+            padding: 10px 20px;
+            border: none;
+            background: #ddd;
+            cursor: pointer;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        
+        .filter-btn.active {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .vehicles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+        }
+        
+        .vehicle-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+        
+        .vehicle-card:hover {
+            transform: translateY(-10px);
+        }
+        
+        .vehicle-image {
+            height: 200px;
+            width: 100%;
+            object-fit: cover;
+        }
+        
+        .vehicle-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: var(--primary);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        
+        .vehicle-info {
+            padding: 20px;
+        }
+        
+        .vehicle-title {
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+            color: var(--secondary);
+        }
+        
+        .vehicle-meta {
+            display: flex;
+            justify-content: space-between;
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+        
+        .vehicle-price {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary);
+            margin: 15px 0;
+        }
+        
+        .vehicle-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .btn {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .btn-secondary {
+            background: var(--secondary);
+            color: white;
+        }
+        
+        .btn i {
+            margin-right: 8px;
+        }
+        
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 1000;
+            overflow-y: auto;
+        }
+        
+        .modal-content {
+            background: white;
+            margin: 50px auto;
+            padding: 30px;
+            border-radius: 10px;
+            max-width: 800px;
+            width: 90%;
+            position: relative;
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #666;
+        }
+        
+        .modal-gallery {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .modal-main-image {
+            height: 400px;
+            width: 100%;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+        
+        .modal-thumbnails {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+        }
+        
+        .modal-thumbnail {
+            height: 120px;
+            width: 100%;
+            object-fit: cover;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        
+        .modal-specs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .spec-item {
+            margin-bottom: 10px;
+        }
+        
+        .spec-item strong {
+            display: block;
+            color: #555;
+            margin-bottom: 5px;
+        }
+        
+        @media (max-width: 768px) {
+            .modal-gallery {
+                grid-template-columns: 1fr;
+            }
+            
+            .modal-specs {
+                grid-template-columns: 1fr;
+            }
+            
+            .filter-buttons {
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Nos Véhicules Disponibles</h1>
+        
+        <div class="filter-buttons">
+            <button class="filter-btn active" data-filter="all">Tous</button>
+            <button class="filter-btn" data-filter="location">À louer</button>
+            <button class="filter-btn" data-filter="vente">À vendre</button>
+        </div>
+        
+        <div class="vehicles-grid">
+            <!-- Véhicule 1 - Location -->
+            <div class="vehicle-card" data-category="location">
+                <div style="position: relative;">
+                    <img src="https://www.elcarrocolombiano.com/wp-content/uploads/2017/11/20171114-TOYOTA-HILUX-2018-01.jpg.webp" alt="Toyota Hilux" class="vehicle-image">
+                    <span class="vehicle-badge">Location</span>
+                </div>
+                <div class="vehicle-info">
+                    <h3 class="vehicle-title">Toyota Hilux 2018 Diesel</h3>
+                    <div class="vehicle-meta">
+                        <span><i class="fas fa-tachometer-alt"></i> 85 000 km</span>
+                        <span><i class="fas fa-map-marker-alt"></i> Ouagadougou</span>
+                    </div>
+                    <div class="vehicle-price">75 000 XOF/jour</div>
+                    <div class="vehicle-actions">
+                        <button class="btn btn-primary" onclick="openModal('modal1')">
+                            <i class="fas fa-info-circle"></i> Détails
+                        </button>
+                        <button class="btn btn-secondary" onclick="contactWhatsApp('Toyota Hilux 2018 Location')">
+                            <i class="fab fa-whatsapp"></i> Contact
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Véhicule 2 - Vente -->
+            <div class="vehicle-card" data-category="vente">
+                <div style="position: relative;">
+                    <img src="https://www.dubicars.com/images/afcc26/w_1300x760/shayan-royal-general-trading-fze/65896a7b-01fc-4c4b-a08f-43245d8a0def.jpg" alt="Toyota Rav4" class="vehicle-image">
+                    <span class="vehicle-badge">Vente</span>
+                </div>
+                <div class="vehicle-info">
+                    <h3 class="vehicle-title">Toyota Rav4 2020 Essence</h3>
+                    <div class="vehicle-meta">
+                        <span><i class="fas fa-tachometer-alt"></i> 32 000 km</span>
+                        <span><i class="fas fa-map-marker-alt"></i> Bobo-Dioulasso</span>
+                    </div>
+                    <div class="vehicle-price">12 500 000 XOF</div>
+                    <div class="vehicle-actions">
+                        <button class="btn btn-primary" onclick="openModal('modal2')">
+                            <i class="fas fa-info-circle"></i> Détails
+                        </button>
+                        <button class="btn btn-secondary" onclick="contactWhatsApp('Toyota Rav4 2020 Vente')">
+                            <i class="fab fa-whatsapp"></i> Contact
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Véhicule 3 - Location -->
+            <div class="vehicle-card" data-category="location">
+                <div style="position: relative;">
+                    <img src="https://www.visionautomotriz.com.mx/wp-content/uploads/fly-images/25783/BA_4DOOR_2017_GEN_LHD_EXTERIOR_LINEUP_SILVER-1100x690-c.jpg" alt="Hyundai Grand i10" class="vehicle-image">
+                    <span class="vehicle-badge">Location</span>
+                </div>
+                <div class="vehicle-info">
+                    <h3 class="vehicle-title">Hyundai Grand i10 2019</h3>
+                    <div class="vehicle-meta">
+                        <span><i class="fas fa-tachometer-alt"></i> 45 000 km</span>
+                        <span><i class="fas fa-map-marker-alt"></i> Ouagadougou</span>
+                    </div>
+                    <div class="vehicle-price">35 000 XOF/jour</div>
+                    <div class="vehicle-actions">
+                        <button class="btn btn-primary" onclick="openModal('modal3')">
+                            <i class="fas fa-info-circle"></i> Détails
+                        </button>
+                        <button class="btn btn-secondary" onclick="contactWhatsApp('Hyundai Grand i10 Location')">
+                            <i class="fab fa-whatsapp"></i> Contact
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Véhicule 4 - Vente -->
+            <div class="vehicle-card" data-category="vente">
+                <div style="position: relative;">
+                    <img src="https://s2-autoesporte.glbimg.com/BpZgUZsrr3cFkbchDuWwI_TKgj8=/0x0:620x400/984x0/smart/filters:strip_icc()/i.s3.glbimg.com/v1/AUTH_cf9d035bf26b4646b105bd958f32089d/internal_photos/bs/2020/l/C/TUIUtSSSAAm2tAU1OGMw/2015-08-21-toyota-hilux-limited-edition-1-960-640.jpg" alt="Toyota Hilux" class="vehicle-image">
+                    <span class="vehicle-badge">Vente</span>
+                </div>
+                <div class="vehicle-info">
+                    <h3 class="vehicle-title">Toyota Hilux 2015 Diesel</h3>
+                    <div class="vehicle-meta">
+                        <span><i class="fas fa-tachometer-alt"></i> 120 000 km</span>
+                        <span><i class="fas fa-map-marker-alt"></i> Banfora</span>
+                    </div>
+                    <div class="vehicle-price">7 800 000 XOF</div>
+                    <div class="vehicle-actions">
+                        <button class="btn btn-primary" onclick="openModal('modal4')">
+                            <i class="fas fa-info-circle"></i> Détails
+                        </button>
+                        <button class="btn btn-secondary" onclick="contactWhatsApp('Toyota Hilux 2015 Vente')">
+                            <i class="fab fa-whatsapp"></i> Contact
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Véhicule 5 - Location -->
+            <div class="vehicle-card" data-category="location">
+                <div style="position: relative;">
+                    <img src="https://www.carconversation.com.au/images/reviews/2017-toyota-prado-review/2017_Toyota_Prado_GXL_Altitude_full_article.jpg" alt="Toyota Prado" class="vehicle-image">
+                    <span class="vehicle-badge">Location</span>
+                </div>
+                <div class="vehicle-info">
+                    <h3 class="vehicle-title">Toyota Prado 2017 Diesel</h3>
+                    <div class="vehicle-meta">
+                        <span><i class="fas fa-tachometer-alt"></i> 65 000 km</span>
+                        <span><i class="fas fa-map-marker-alt"></i> Ouagadougou</span>
+                    </div>
+                    <div class="vehicle-price">90 000 XOF/jour</div>
+                    <div class="vehicle-actions">
+                        <button class="btn btn-primary" onclick="openModal('modal5')">
+                            <i class="fas fa-info-circle"></i> Détails
+                        </button>
+                        <button class="btn btn-secondary" onclick="contactWhatsApp('Toyota Prado 2017 Location')">
+                            <i class="fab fa-whatsapp"></i> Contact
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modals -->
+    <!-- Modal 1 - Hilux 2018 Location -->
+    <div id="modal1" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('modal1')">&times;</span>
+            <h2>Toyota Hilux 2018 Diesel - Location</h2>
+            <div class="modal-gallery">
+                <img src="https://images.caradisiac.com/logos-ref/gamme/gamme--toyota-hilux/S8-gamme--toyota-hilux.jpg" alt="Hilux Extérieur" class="modal-main-image" id="modal1-main">
+                <div class="modal-thumbnails">
+                    <img src="https://www.toyota.cg/media/gamme/modeles/images/39271430e366681ff0542af0517deb23.png" alt="Intérieur" class="modal-thumbnail" onclick="changeModalImage('modal1-main', this)">
+                    <img src="https://cdn.motor1.com/images/mgl/E6WG6v/s1/toyota-hilux-2024-mild-hybrid-48-v---motore.jpg" alt="Moteur" class="modal-thumbnail" onclick="changeModalImage('modal1-main', this)">
+                    <img src="https://www.promyges4x4.com/11260-large_default/coffre-utilitaire-inclinable-cote-droit-toyota-hilux-revo-2016.jpg" alt="Coffre" class="modal-thumbnail" onclick="changeModalImage('modal1-main', this)">
+                </div>
+            </div>
+            
+            <div class="modal-specs">
+                <div>
+                    <div class="spec-item">
+                        <strong>Marque/Modèle</strong>
+                        <span>Toyota Hilux 2.4 D-4D Invincible</span>
+                    </div>
+                    <div class="spec-item">
+                        <strong>Année</strong>
+                        <span>2018</span>
+                    </div>
+                    <div class="spec-item">
+                        <strong>Kilométrage</strong>
+                        <span>85 000 km</span>
+                    </div>
+                    <div class="spec-item">
+                        <strong>Carburant</strong>
+                        <span>Diesel</span>
+                    </div>
+                    <div class="spec-item">
+                        <strong>Boîte</strong>
+                        <span>Automatique 6 rapports</span>
+                    </div>
+                </div>
+                <div>
+                    <div class="spec-item">
+                        <strong>Puissance</strong>
+                        <span>150 ch / 400 Nm</span>
+                    </div>
+                    <div class="spec-item">
+                        <strong>Portes</strong>
+                        <span>5 portes</span>
+                    </div>
+                    <div class="spec-item">
+                        <strong>Couleur</strong>
+                        <span>Blanc nacré</span>
+                    </div>
+                    <div class="spec-item">
+                        <strong>Options</strong>
+                        <span>Clim auto, Caméra de recul, Régulateur</span>
+                    </div>
+                    <div class="spec-item">
+                        <strong>Caution</strong>
+                        <span>1 000 000 XOF</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 20px;">
+                <button class="btn btn-primary" style="padding: 15px 30px;" onclick="contactWhatsApp('Toyota Hilux 2018 Location - Demande de réservation')">
+                    <i class="fab fa-whatsapp"></i> Réserver maintenant
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal 2 - Rav4 2020 Vente -->
+    <div id="modal2" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('modal2')">&times;</span>
+            <h2>Toyota Rav4 2020 Essence - Vente</h2>
+            <div class="modal-gallery">
+                <img src="https://via.placeholder.com/800x500?text=Toyota+Rav4+2020+Extérieur" alt="Rav4 Extérieur" class="modal-main-image" id="modal2-main">
+                <div class="modal-thumbnails">
+                    <img src="https://via.placeholder.com/300x200?text=Rav4+Intérieur" alt="Intérieur" class="modal-thumbnail" onclick="changeModalImage('modal2-main', this)">
+                    <img src="https://via.placeholder.com/300x200?text=Rav4+Tableau+de+bord" alt="Tableau de bord" class="modal-thumbnail" onclick="changeModalImage('modal2-main', this)">
+                    <img src="https://via.placeholder.com/300x200?text=Rav4+Coffre" alt="Coffre" class="modal-thumbnail" onclick="changeModalImage('modal2-main', this)">
+                </div>
+            </div>
+            
+            <div class="modal-specs">
+                <div>
+                    <div class="spec-item">
+                        <strong>Marque/Modèle</strong>
+                        <span>Toyota Rav4 2.0 XLE</span>
+                    </div>
+                    <div class="spec-item">
+                        <strong>Année</strong>
+                        <span>2020</span>
+                    </div>
+                    <div class="spec-item">
+                        <strong>Kilométrage</strong>
+                        <span>32 000 km</span>
+                    </div>
+                    <div class="spec-item">
+                        <strong>Carburant</strong>
+                        <span>Essence</span>
+                    </div>
+                    <div class="spec-item">
+                        <strong>Boîte</strong>
+                        <span>Automatique CVT</span>
+                    </div>
+                </div>
+                <div>
+                    <div class="spec-item">
+                        <strong>Puissance</strong>
+                        <span>170 ch</span>
+                    </div>
+                    <div class="spec-item">
+                        <strong>Portes</strong>
+                        <span>5 portes</span>
+                    </div>
+                    <div class="spec-item">
+                        <strong>Couleur</strong>
+                        <span>Gris métallisé</span>
+                    </div>
+                    <div class="spec-item">
+                        <strong>Options</strong>
+                        <span>Toit panoramique, Apple CarPlay, Sièges cuir</span>
+                    </div>
+                    <div class="spec-item">
+                        <strong>Garantie</strong>
+                        <span>6 mois moteur/boîte</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 20px;">
+                <button class="btn btn-primary" style="padding: 15px 30px;" onclick="contactWhatsApp('Toyota Rav4 2020 Vente - Demande d\'achat')">
+                    <i class="fab fa-whatsapp"></i> Demander une inspection
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Les autres modals (3, 4, 5) suivent le même modèle -->
+    
+    <script>
+        // Filtrage des véhicules
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                
+                const filter = this.dataset.filter;
+                document.querySelectorAll('.vehicle-card').forEach(card => {
+                    if (filter === 'all' || card.dataset.category === filter) {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            });
+        });
+        
+        // Gestion des modals
+        function openModal(modalId) {
+            document.getElementById(modalId).style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+        
+        function changeModalImage(mainImageId, thumbnail) {
+            document.getElementById(mainImageId).src = thumbnail.src;
+        }
+        
+        // Contact WhatsApp
+        function contactWhatsApp(vehicleName) {
+            const message = encodeURIComponent(`Bonjour, je suis intéressé par le véhicule suivant : ${vehicleName}. Pouvez-vous me fournir plus d'informations ?`);
+            window.open(`https://wa.me/22605585868?text=${message}`);
+        }
+        
+        // Fermer modal en cliquant en dehors
+        window.onclick = function(event) {
+            if (event.target.className === 'modal') {
+                event.target.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }
+        }
+    </script>
+</body>
+</html>

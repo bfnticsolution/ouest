@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Immobilier | OUEST DEAL</title>
+    <style>
+        :root {
+            --primary: #FF6B00;
+            --secondary: #005F73;
+            --light: #f8f9fa;
+            --dark: #212529;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            color: var(--secondary);
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .filter-buttons {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .filter-btn {
+            padding: 10px 20px;
+            border: none;
+            background: #ddd;
+            cursor: pointer;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        
+        .filter-btn.active {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .properties-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+        }
+        
+        .property-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+        
+        .property-card:hover {
+            transform: translateY(-10px);
+        }
+        
+        .property-image-container {
+            position: relative;
+            height: 200px;
+            overflow: hidden;
+        }
+        
+        .property-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+        
+        .property-card:hover .property-image {
+            transform: scale(1.05);
+        }
+        
+        .property-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: var(--primary);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        
+        .property-info {
+            padding: 20px;
+        }
+        
+        .property-title {
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+            color: var(--secondary);
+        }
+        
+        .property-location {
+            display: flex;
+            align-items: center;
+            color: #666;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+        }
+        
+        .property-features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 15px 0;
+        }
+        
+        .feature {
+            display: flex;
+            align-items: center;
+            font-size: 0.8rem;
+            color: #555;
+        }
+        
+        .feature i {
+            color: var(--primary);
+            margin-right: 5px;
+        }
+        
+        .property-price {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary);
+            margin: 15px 0;
+        }
+        
+        .property-price small {
+            font-size: 0.8rem;
+            color: #666;
+            font-weight: normal;
+        }
+        
+        .property-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .btn {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .btn-secondary {
+            background: var(--secondary);
+            color: white;
+        }
+        
+        .btn i {
+            margin-right: 8px;
+        }
+        
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 1000;
+            overflow-y: auto;
+        }
+        
+        .modal-content {
+            background: white;
+            margin: 50px auto;
+            padding: 30px;
+            border-radius: 10px;
+            max-width: 900px;
+            width: 90%;
+            position: relative;
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #666;
+        }
+        
+        .modal-gallery {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .modal-main-image {
+            height: 400px;
+            width: 100%;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+        
+        .modal-thumbnails {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+        }
+        
+        .modal-thumbnail {
+            height: 120px;
+            width: 100%;
+            object-fit: cover;
+            cursor: pointer;
+            border-radius: 5px;
+            border: 2px solid transparent;
+        }
+        
+        .modal-thumbnail:hover {
+            border-color: var(--primary);
+        }
+        
+        .modal-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin: 30px 0;
+        }
+        
+        .modal-section h3 {
+            color: var(--secondary);
+            margin-bottom: 15px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .detail-item {
+            margin-bottom: 10px;
+            display: flex;
+        }
+        
+        .detail-label {
+            font-weight: bold;
+            min-width: 150px;
+            color: #555;
+        }
+        
+        .amenities-list {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .amenity {
+            display: flex;
+            align-items: center;
+            font-size: 0.9rem;
+        }
+        
+        .amenity i {
+            color: var(--primary);
+            margin-right: 8px;
+        }
+        
+        .modal-map {
+            height: 300px;
+            width: 100%;
+            background: #eee;
+            border-radius: 5px;
+            margin-top: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+        }
+        
+        @media (max-width: 768px) {
+            .modal-gallery, .modal-details {
+                grid-template-columns: 1fr;
+            }
+            
+            .amenities-list {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Nos Offres Immobilières</h1>
+        
+        <div class="filter-buttons">
+            <button class="filter-btn active" data-filter="all">Tous</button>
+            <button class="filter-btn" data-filter="location">À louer</button>
+            <button class="filter-btn" data-filter="vente">À vendre</button>
+            <button class="filter-btn" data-filter="maison">Maisons</button>
+            <button class="filter-btn" data-filter="appartement">Appartements</button>
+            <button class="filter-btn" data-filter="terrain">Terrains</button>
+        </div>
+        
+        <div class="properties-grid">
+            <!-- Propriété 1 - Location Maison -->
+            <div class="property-card" data-category="location maison">
+                <div class="property-image-container">
+                    <img src="https://via.placeholder.com/600x400?text=Maison+Ouaga+2000" alt="Maison Ouaga 2000" class="property-image">
+                    <span class="property-badge">Location</span>
+                </div>
+                <div class="property-info">
+                    <h3 class="property-title">Maison 3 chambres à Ouaga 2000</h3>
+                    <div class="property-location">
+                        <i class="fas fa-map-marker-alt"></i> Ouagadougou, Secteur 15
+                    </div>
+                    <div class="property-features">
+                        <div class="feature"><i class="fas fa-bed"></i> 3 chambres</div>
+                        <div class="feature"><i class="fas fa-bath"></i> 2 salles de bain</div>
+                        <div class="feature"><i class="fas fa-ruler-combined"></i> 150 m²</div>
+                    </div>
+                    <div class="property-price">200 000 XOF/mois <small>(Caution: 400 000 XOF)</small></div>
+                    <div class="property-actions">
+                        <button class="btn btn-primary" onclick="openModal('modal1')">
+                            <i class="fas fa-info-circle"></i> Détails
+                        </button>
+                        <button class="btn btn-secondary" onclick="contactWhatsApp('Maison Ouaga 2000 Location')">
+                            <i class="fab fa-whatsapp"></i> Contact
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Propriété 2 - Vente Appartement -->
+            <div class="property-card" data-category="vente appartement">
+                <div class="property-image-container">
+                    <img src="https://via.placeholder.com/600x400?text=Appartement+Bobo" alt="Appartement Bobo" class="property-image">
+                    <span class="property-badge">Vente</span>
+                </div>
+                <div class="property-info">
+                    <h3 class="property-title">Appartement standing à Bobo</h3>
+                    <div class="property-location">
+                        <i class="fas fa-map-marker-alt"></i> Bobo-Dioulasso, Secteur 5
+                    </div>
+                    <div class="property-features">
+                        <div class="feature"><i class="fas fa-bed"></i> 2 chambres</div>
+                        <div class="feature"><i class="fas fa-bath"></i> 1 salle de bain</div>
+                        <div class="feature"><i class="fas fa-ruler-combined"></i> 85 m²</div>
+                    </div>
+                    <div class="property-price">25 000 000 XOF <small>(294 118 XOF/m²)</small></div>
+                    <div class="property-actions">
+                        <button class="btn btn-primary" onclick="openModal('modal2')">
+                            <i class="fas fa-info-circle"></i> Détails
+                        </button>
+                        <button class="btn btn-secondary" onclick="contactWhatsApp('Appartement Bobo Vente')">
+                            <i class="fab fa-whatsapp"></i> Contact
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Propriété 3 - Location Villa -->
+            <div class="property-card" data-category="location maison">
+                <div class="property-image-container">
+                    <img src="https://via.placeholder.com/600x400?text=Villa+Koudougou" alt="Villa Koudougou" class="property-image">
+                    <span class="property-badge">Location</span>
+                </div>
+                <div class="property-info">
+                    <h3 class="property-title">Villa 4 chambres à Koudougou</h3>
+                    <div class="property-location">
+                        <i class="fas fa-map-marker-alt"></i> Koudougou, Quartier résidentiel
+                    </div>
+                    <div class="property-features">
+                        <div class="feature"><i class="fas fa-bed"></i> 4 chambres</div>
+                        <div class="feature"><i class="fas fa-bath"></i> 3 salles de bain</div>
+                        <div class="feature"><i class="fas fa-ruler-combined"></i> 220 m²</div>
+                    </div>
+                    <div class="property-price">350 000 XOF/mois <small>(Caution: 700 000 XOF)</small></div>
+                    <div class="property-actions">
+                        <button class="btn btn-primary" onclick="openModal('modal3')">
+                            <i class="fas fa-info-circle"></i> Détails
+                        </button>
+                        <button class="btn btn-secondary" onclick="contactWhatsApp('Villa Koudougou Location')">
+                            <i class="fab fa-whatsapp"></i> Contact
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Propriété 4 - Vente Terrain -->
+            <div class="property-card" data-category="vente terrain">
+                <div class="property-image-container">
+                    <img src="https://via.placeholder.com/600x400?text=Terrain+Banfora" alt="Terrain Banfora" class="property-image">
+                    <span class="property-badge">Vente</span>
+                </div>
+                <div class="property-info">
+                    <h3 class="property-title">Terrain constructible à Banfora</h3>
+                    <div class="property-location">
+                        <i class="fas fa-map-marker-alt"></i> Banfora, Secteur 7
+                    </div>
+                    <div class="property-features">
+                        <div class="feature"><i class="fas fa-ruler-combined"></i> 360 m²</div>
+                        <div class="feature"><i class="fas fa-road"></i> Voirie aménagée</div>
+                        <div class="feature"><i class="fas fa-bolt"></i> Électricité proche</div>
+                    </div>
+                    <div class="property-price">8 000 000 XOF <small>(22 222 XOF/m²)</small></div>
+                    <div class="property-actions">
+                        <button class="btn btn-primary" onclick="openModal('modal4')">
+                            <i class="fas fa-info-circle"></i> Détails
+                        </button>
+                        <button class="btn btn-secondary" onclick="contactWhatsApp('Terrain Banfora Vente')">
+                            <i class="fab fa-whatsapp"></i> Contact
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Propriété 5 - Location Appartement -->
+            <div class="property-card" data-category="location appartement">
+                <div class="property-image-container">
+                    <img src="https://via.placeholder.com/600x400?text=Appartement+Ouaga" alt="Appartement Ouaga" class="property-image">
+                    <span class="property-badge">Location</span>
+                </div>
+                <div class="property-info">
+                    <h3 class="property-title">Appartement meublé centre-ville</h3>
+                    <div class="property-location">
+                        <i class="fas fa-map-marker-alt"></i> Ouagadougou, Avenue Kwame Nkrumah
+                    </div>
+                    <div class="property-features">
+                        <div class="feature"><i class="fas fa-bed"></i> 1 chambre</div>
+                        <div class="feature"><i class="fas fa-bath"></i> 1 salle de bain</div>
+                        <div class="feature"><i class="fas fa-ruler-combined"></i> 60 m²</div>
+                    </div>
+                    <div class="property-price">120 000 XOF/mois <small>(Caution: 240 000 XOF)</small></div>
+                    <div class="property-actions">
+                        <button class="btn btn-primary" onclick="openModal('modal5')">
+                            <i class="fas fa-info-circle"></i> Détails
+                        </button>
+                        <button class="btn btn-secondary" onclick="contactWhatsApp('Appartement Ouaga Location')">
+                            <i class="fab fa-whatsapp"></i> Contact
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modals -->
+    <!-- Modal 1 - Maison Ouaga 2000 -->
+    <div id="modal1" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('modal1')">&times;</span>
+            <h2>Maison 3 chambres à Ouaga 2000 - Location</h2>
+            
+            <div class="modal-gallery">
+                <img src="https://via.placeholder.com/800x500?text=Maison+Ouaga+2000+Extérieur" alt="Maison Extérieur" class="modal-main-image" id="modal1-main">
+                <div class="modal-thumbnails">
+                    <img src="https://via.placeholder.com/300x200?text=Salon" alt="Salon" class="modal-thumbnail" onclick="changeModalImage('modal1-main', this)">
+                    <img src="https://via.placeholder.com/300x200?text=Cuisine" alt="Cuisine" class="modal-thumbnail" onclick="changeModalImage('modal1-main', this)">
+                    <img src="https://via.placeholder.com/300x200?text=Chambre+Principale" alt="Chambre" class="modal-thumbnail" onclick="changeModalImage('modal1-main', this)">
+                </div>
+            </div>
+            
+            <div class="modal-details">
+                <div class="modal-section">
+                    <h3>Caractéristiques</h3>
+                    <div class="detail-item">
+                        <div class="detail-label">Type:</div>
+                        <div>Maison individuelle</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Surface:</div>
+                        <div>150 m²</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Chambres:</div>
+                        <div>3 (dont 1 suite parentale)</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Salles de bain:</div>
+                        <div>2 (dont 1 salle d'eau)</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Cuisine:</div>
+                        <div>Équipée (four, plaques, frigo)</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Année construction:</div>
+                        <div>2018</div>
+                    </div>
+                </div>
+                
+                <div class="modal-section">
+                    <h3>Équipements</h3>
+                    <div class="amenities-list">
+                        <div class="amenity"><i class="fas fa-check"></i> Climatisation</div>
+                        <div class="amenity"><i class="fas fa-check"></i> Chauffage</div>
+                        <div class="amenity"><i class="fas fa-check"></i> Garage</div>
+                        <div class="amenity"><i class="fas fa-check"></i> Jardin</div>
+                        <div class="amenity"><i class="fas fa-check"></i> Piscine</div>
+                        <div class="amenity"><i class="fas fa-check"></i> Sécurité</div>
+                    </div>
+                    
+                    <h3 style="margin-top: 20px;">Conditions</h3>
+                    <div class="detail-item">
+                        <div class="detail-label">Caution:</div>
+                        <div>400 000 XOF</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Disponibilité:</div>
+                        <div>Immédiate</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Charges comprises:</div>
+                        <div>Eau, électricité (jusqu'à 20 000 XOF/mois)</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="modal-map">
+                [Carte Google Maps - Localisation exacte]
+            </div>
+            
+            <div style="text-align: center; margin-top: 20px;">
+                <button class="btn btn-primary" style="padding: 15px 30px;" onclick="contactWhatsApp('Maison Ouaga 2000 - Demande de visite')">
+                    <i class="fab fa-whatsapp"></i> Demander une visite
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal 2 - Appartement Bobo -->
+    <div id="modal2" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('modal2')">&times;</span>
+            <h2>Appartement standing à Bobo - Vente</h2>
+            
+            <div class="modal-gallery">
+                <img src="https://via.placeholder.com/800x500?text=Appartement+Bobo+Salon" alt="Appartement Salon" class="modal-main-image" id="modal2-main">
+                <div class="modal-thumbnails">
+                    <img src="https://via.placeholder.com/300x200?text=Cuisine+équipée" alt="Cuisine" class="modal-thumbnail" onclick="changeModalImage('modal2-main', this)">
+                    <img src="https://via.placeholder.com/300x200?text=Chambre" alt="Chambre" class="modal-thumbnail" onclick="changeModalImage('modal2-main', this)">
+                    <img src="https://via.placeholder.com/300x200?text=Terrasse" alt="Terrasse" class="modal-thumbnail" onclick="changeModalImage('modal2-main', this)">
+                </div>
+            </div>
+            
+            <div class="modal-details">
+                <div class="modal-section">
+                    <h3>Caractéristiques</h3>
+                    <div class="detail-item">
+                        <div class="detail-label">Type:</div>
+                        <div>Appartement</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Surface:</div>
+                        <div>85 m²</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Étage:</div>
+                        <div>2ème étage (avec ascenseur)</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Chambres:</div>
+                        <div>2</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Salle de bain:</div>
+                        <div>1 (douche italienne)</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Année construction:</div>
+                        <div>2020</div>
+                    </div>
+                </div>
+                
+                <div class="modal-section">
+                    <h3>Équipements</h3>
+                    <div class="amenities-list">
+                        <div class="amenity"><i class="fas fa-check"></i> Climatisation</div>
+                        <div class="amenity"><i class="fas fa-check"></i> Ascenseur</div>
+                        <div class="amenity"><i class="fas fa-check"></i> Cuisine équipée</div>
+                        <div class="amenity"><i class="fas fa-check"></i> Balcon</div>
+                        <div class="amenity"><i class="fas fa-check"></i> Parking</div>
+                        <div class="amenity"><i class="fas fa-check"></i> Gardiennage</div>
+                    </div>
+                    
+                    <h3 style="margin-top: 20px;">Conditions</h3>
+                    <div class="detail-item">
+                        <div class="detail-label">Prix:</div>
+                        <div>25 000 000 XOF (négociable)</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">État:</div>
+                        <div>Neuf, jamais occupé</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Titre foncier:</div>
+                        <div>Disponible (copie fournie)</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="modal-map">
+                [Carte Google Maps - Localisation exacte]
+            </div>
+            
+            <div style="text-align: center; margin-top: 20px;">
+                <button class="btn btn-primary" style="padding: 15px 30px;" onclick="contactWhatsApp('Appartement Bobo - Demande d\'achat')">
+                    <i class="fab fa-whatsapp"></i> Demander une visite
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Les autres modals (3, 4, 5) suivent le même modèle -->
+    
+    <script>
+        // Filtrage des propriétés
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                
+                const filter = this.dataset.filter;
+                document.querySelectorAll('.property-card').forEach(card => {
+                    if (filter === 'all') {
+                        card.style.display = 'block';
+                    } else {
+                        const categories = card.dataset.category.split(' ');
+                        if (categories.includes(filter)) {
+                            card.style.display = 'block';
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    }
+                });
+            });
+        });
+        
+        // Gestion des modals
+        function openModal(modalId) {
+            document.getElementById(modalId).style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+        
+        function changeModalImage(mainImageId, thumbnail) {
+            document.getElementById(mainImageId).src = thumbnail.src;
+        }
+        
+        // Contact WhatsApp
+        function contactWhatsApp(propertyName) {
+            const message = encodeURIComponent(`Bonjour, je suis intéressé par le bien immobilier suivant : ${propertyName}. Pouvez-vous me fournir plus d'informations ?`);
+            window.open(`https://wa.me/22605585868?text=${message}`);
+        }
+        
+        // Fermer modal en cliquant en dehors
+        window.onclick = function(event) {
+            if (event.target.className === 'modal') {
+                event.target.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }
+        }
+    </script>
+</body>
+</html>

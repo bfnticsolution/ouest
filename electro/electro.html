@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Électroménager | OUEST DEAL</title>
+    <style>
+        :root {
+            --primary: #FF6B00;
+            --secondary: #005F73;
+            --light: #f8f9fa;
+            --dark: #212529;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            color: var(--secondary);
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .filter-buttons {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .filter-btn {
+            padding: 10px 20px;
+            border: none;
+            background: #ddd;
+            cursor: pointer;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        
+        .filter-btn.active {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+        }
+        
+        .product-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-10px);
+        }
+        
+        .product-image-container {
+            position: relative;
+            height: 200px;
+            overflow: hidden;
+        }
+        
+        .product-image {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            background: #f9f9f9;
+            transition: transform 0.5s;
+        }
+        
+        .product-card:hover .product-image {
+            transform: scale(1.05);
+        }
+        
+        .product-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        
+        .badge-new {
+            background: var(--secondary);
+        }
+        
+        .badge-used {
+            background: var(--primary);
+        }
+        
+        .product-info {
+            padding: 20px;
+        }
+        
+        .product-title {
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+            color: var(--secondary);
+        }
+        
+        .product-brand {
+            display: flex;
+            align-items: center;
+            color: #666;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+        }
+        
+        .product-features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 15px 0;
+        }
+        
+        .feature {
+            display: flex;
+            align-items: center;
+            font-size: 0.8rem;
+            color: #555;
+        }
+        
+        .feature i {
+            color: var(--primary);
+            margin-right: 5px;
+        }
+        
+        .product-price {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary);
+            margin: 15px 0;
+        }
+        
+        .product-price small {
+            font-size: 0.8rem;
+            color: #666;
+            font-weight: normal;
+        }
+        
+        .product-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .btn {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .btn-secondary {
+            background: var(--secondary);
+            color: white;
+        }
+        
+        .btn i {
+            margin-right: 8px;
+        }
+        
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 1000;
+            overflow-y: auto;
+        }
+        
+        .modal-content {
+            background: white;
+            margin: 50px auto;
+            padding: 30px;
+            border-radius: 10px;
+            max-width: 900px;
+            width: 90%;
+            position: relative;
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #666;
+        }
+        
+        .modal-gallery {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .modal-main-image {
+            height: 400px;
+            width: 100%;
+            object-fit: contain;
+            background: #f9f9f9;
+            border-radius: 5px;
+        }
+        
+        .modal-thumbnails {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+        }
+        
+        .modal-thumbnail {
+            height: 120px;
+            width: 100%;
+            object-fit: contain;
+            background: #f9f9f9;
+            cursor: pointer;
+            border-radius: 5px;
+            border: 2px solid transparent;
+        }
+        
+        .modal-thumbnail:hover {
+            border-color: var(--primary);
+        }
+        
+        .modal-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin: 30px 0;
+        }
+        
+        .modal-section h3 {
+            color: var(--secondary);
+            margin-bottom: 15px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .detail-item {
+            margin-bottom: 10px;
+            display: flex;
+        }
+        
+        .detail-label {
+            font-weight: bold;
+            min-width: 150px;
+            color: #555;
+        }
+        
+        .features-list {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .feature-item {
+            display: flex;
+            align-items: center;
+            font-size: 0.9rem;
+        }
+        
+        .feature-item i {
+            color: var(--primary);
+            margin-right: 8px;
+        }
+        
+        @media (max-width: 768px) {
+            .modal-gallery, .modal-details {
+                grid-template-columns: 1fr;
+            }
+            
+            .features-list {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .warranty-badge {
+            display: inline-block;
+            padding: 3px 10px;
+            background: #28a745;
+            color: white;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            margin-left: 10px;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Nos Électroménagers</h1>
+        
+        <div class="filter-buttons">
+            <button class="filter-btn active" data-filter="all">Tous</button>
+            <button class="filter-btn" data-filter="neuf">Neuf</button>
+            <button class="filter-btn" data-filter="occasion">Occasion</button>
+            <button class="filter-btn" data-filter="refrigerateur">Réfrigérateurs</button>
+            <button class="filter-btn" data-filter="machine">Machines à laver</button>
+            <button class="filter-btn" data-filter="cuisson">Cuisson</button>
+        </div>
+        
+        <div class="products-grid">
+            <!-- Produit 1 - Réfrigérateur Neuf -->
+            <div class="product-card" data-category="neuf refrigerateur">
+                <div class="product-image-container">
+                    <img src="https://via.placeholder.com/600x600?text=Réfrigérateur+Neuf" alt="Réfrigérateur Samsung" class="product-image">
+                    <span class="product-badge badge-new">Neuf</span>
+                </div>
+                <div class="product-info">
+                    <h3 class="product-title">Réfrigérateur Samsung 400L</h3>
+                    <div class="product-brand">
+                        <i class="fas fa-tag"></i> Samsung - Modèle RT38K5930S9
+                    </div>
+                    <div class="product-features">
+                        <div class="feature"><i class="fas fa-snowflake"></i> No Frost</div>
+                        <div class="feature"><i class="fas fa-box"></i> 400 Litres</div>
+                        <div class="feature"><i class="fas fa-bolt"></i> A++</div>
+                    </div>
+                    <div class="product-price">450 000 XOF <small class="warranty-badge">Garantie 2 ans</small></div>
+                    <div class="product-actions">
+                        <button class="btn btn-primary" onclick="openModal('modal1')">
+                            <i class="fas fa-info-circle"></i> Détails
+                        </button>
+                        <button class="btn btn-secondary" onclick="contactWhatsApp('Réfrigérateur Samsung Neuf')">
+                            <i class="fab fa-whatsapp"></i> Contact
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Produit 2 - Machine à laver Occasion -->
+            <div class="product-card" data-category="occasion machine">
+                <div class="product-image-container">
+                    <img src="https://via.placeholder.com/600x600?text=Machine+Occasion" alt="Machine à laver LG" class="product-image">
+                    <span class="product-badge badge-used">Occasion</span>
+                </div>
+                <div class="product-info">
+                    <h3 class="product-title">Machine à laver LG 8kg</h3>
+                    <div class="product-brand">
+                        <i class="fas fa-tag"></i> LG - Modèle F4J6TM1W
+                    </div>
+                    <div class="product-features">
+                        <div class="feature"><i class="fas fa-tint"></i> 8kg</div>
+                        <div class="feature"><i class="fas fa-play"></i> 1200 tours/min</div>
+                        <div class="feature"><i class="fas fa-bolt"></i> A+++</div>
+                    </div>
+                    <div class="product-price">175 000 XOF <small>(État: Très bon)</small></div>
+                    <div class="product-actions">
+                        <button class="btn btn-primary" onclick="openModal('modal2')">
+                            <i class="fas fa-info-circle"></i> Détails
+                        </button>
+                        <button class="btn btn-secondary" onclick="contactWhatsApp('Machine LG Occasion')">
+                            <i class="fab fa-whatsapp"></i> Contact
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Produit 3 - Cuisinière Neuf -->
+            <div class="product-card" data-category="neuf cuisson">
+                <div class="product-image-container">
+                    <img src="https://via.placeholder.com/600x600?text=Cuisinière+Neuf" alt="Cuisinière Bosch" class="product-image">
+                    <span class="product-badge badge-new">Neuf</span>
+                </div>
+                <div class="product-info">
+                    <h3 class="product-title">Cuisinière Gaz/Élec Bosch</h3>
+                    <div class="product-brand">
+                        <i class="fas fa-tag"></i> Bosch - Modèle PPS641B1AE
+                    </div>
+                    <div class="product-features">
+                        <div class="feature"><i class="fas fa-fire"></i> 4 feux gaz</div>
+                        <div class="feature"><i class="fas fa-oven"></i> Four électrique</div>
+                        <div class="feature"><i class="fas fa-clock"></i> Minuterie</div>
+                    </div>
+                    <div class="product-price">325 000 XOF <small class="warranty-badge">Garantie 1 an</small></div>
+                    <div class="product-actions">
+                        <button class="btn btn-primary" onclick="openModal('modal3')">
+                            <i class="fas fa-info-circle"></i> Détails
+                        </button>
+                        <button class="btn btn-secondary" onclick="contactWhatsApp('Cuisinière Bosch Neuf')">
+                            <i class="fab fa-whatsapp"></i> Contact
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Produit 4 - Congélateur Occasion -->
+            <div class="product-card" data-category="occasion refrigerateur">
+                <div class="product-image-container">
+                    <img src="https://via.placeholder.com/600x600?text=Congélateur+Occasion" alt="Congélateur Whirlpool" class="product-image">
+                    <span class="product-badge badge-used">Occasion</span>
+                </div>
+                <div class="product-info">
+                    <h3 class="product-title">Congélateur Whirlpool 200L</h3>
+                    <div class="product-brand">
+                        <i class="fas fa-tag"></i> Whirlpool - Modèle WBC 3534 A+
+                    </div>
+                    <div class="product-features">
+                        <div class="feature"><i class="fas fa-box"></i> 200 Litres</div>
+                        <div class="feature"><i class="fas fa-arrows-alt-v"></i> Vertical</div>
+                        <div class="feature"><i class="fas fa-bolt"></i> Classe A</div>
+                    </div>
+                    <div class="product-price">95 000 XOF <small>(État: Bon)</small></div>
+                    <div class="product-actions">
+                        <button class="btn btn-primary" onclick="openModal('modal4')">
+                            <i class="fas fa-info-circle"></i> Détails
+                        </button>
+                        <button class="btn btn-secondary" onclick="contactWhatsApp('Congélateur Whirlpool Occasion')">
+                            <i class="fab fa-whatsapp"></i> Contact
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Produit 5 - Four à micro-ondes Neuf -->
+            <div class="product-card" data-category="neuf cuisson">
+                <div class="product-image-container">
+                    <img src="https://via.placeholder.com/600x600?text=Micro-ondes+Neuf" alt="Four à micro-ondes" class="product-image">
+                    <span class="product-badge badge-new">Neuf</span>
+                </div>
+                <div class="product-info">
+                    <h3 class="product-title">Micro-ondes Panasonic 25L</h3>
+                    <div class="product-brand">
+                        <i class="fas fa-tag"></i> Panasonic - Modèle NN-ST65JWEPG
+                    </div>
+                    <div class="product-features">
+                        <div class="feature"><i class="fas fa-box"></i> 25 Litres</div>
+                        <div class="feature"><i class="fas fa-grill-hot"></i> Grill</div>
+                        <div class="feature"><i class="fas fa-sliders-h"></i> 6 niveaux</div>
+                    </div>
+                    <div class="product-price">85 000 XOF <small class="warranty-badge">Garantie 1 an</small></div>
+                    <div class="product-actions">
+                        <button class="btn btn-primary" onclick="openModal('modal5')">
+                            <i class="fas fa-info-circle"></i> Détails
+                        </button>
+                        <button class="btn btn-secondary" onclick="contactWhatsApp('Micro-ondes Panasonic Neuf')">
+                            <i class="fab fa-whatsapp"></i> Contact
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Produit 6 - Lave-vaisselle Occasion -->
+            <div class="product-card" data-category="occasion machine">
+                <div class="product-image-container">
+                    <img src="https://via.placeholder.com/600x600?text=Lave-vaisselle+Occasion" alt="Lave-vaisselle" class="product-image">
+                    <span class="product-badge badge-used">Occasion</span>
+                </div>
+                <div class="product-info">
+                    <h3 class="product-title">Lave-vaisselle Beko 12 couverts</h3>
+                    <div class="product-brand">
+                        <i class="fas fa-tag"></i> Beko - Modèle DFN05310W
+                    </div>
+                    <div class="product-features">
+                        <div class="feature"><i class="fas fa-utensils"></i> 12 couverts</div>
+                        <div class="feature"><i class="fas fa-tint"></i> Eco 9L</div>
+                        <div class="feature"><i class="fas fa-bolt"></i> A++</div>
+                    </div>
+                    <div class="product-price">120 000 XOF <small>(État: Comme neuf)</small></div>
+                    <div class="product-actions">
+                        <button class="btn btn-primary" onclick="openModal('modal6')">
+                            <i class="fas fa-info-circle"></i> Détails
+                        </button>
+                        <button class="btn btn-secondary" onclick="contactWhatsApp('Lave-vaisselle Beko Occasion')">
+                            <i class="fab fa-whatsapp"></i> Contact
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modals -->
+    <!-- Modal 1 - Réfrigérateur Neuf -->
+    <div id="modal1" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('modal1')">&times;</span>
+            <h2>Réfrigérateur Samsung 400L - Neuf</h2>
+            
+            <div class="modal-gallery">
+                <img src="https://via.placeholder.com/800x500?text=Réfrigérateur+Samsung+400L" alt="Réfrigérateur" class="modal-main-image" id="modal1-main">
+                <div class="modal-thumbnails">
+                    <img src="https://via.placeholder.com/300x200?text=Intérieur" alt="Intérieur" class="modal-thumbnail" onclick="changeModalImage('modal1-main', this)">
+                    <img src="https://via.placeholder.com/300x200?text=Contrôles" alt="Contrôles" class="modal-thumbnail" onclick="changeModalImage('modal1-main', this)">
+                    <img src="https://via.placeholder.com/300x200?text=Étiquette+énergie" alt="Étiquette énergie" class="modal-thumbnail" onclick="changeModalImage('modal1-main', this)">
+                </div>
+            </div>
+            
+            <div class="modal-details">
+                <div class="modal-section">
+                    <h3>Caractéristiques techniques</h3>
+                    <div class="detail-item">
+                        <div class="detail-label">Marque:</div>
+                        <div>Samsung</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Modèle:</div>
+                        <div>RT38K5930S9</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Capacité:</div>
+                        <div>400 litres (280L frigo + 120L congélo)</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Type:</div>
+                        <div>Combiné réfrigérateur-congélateur</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Classe énergétique:</div>
+                        <div>A++</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Technologie:</div>
+                        <div>No Frost (dégivrage automatique)</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Dimensions:</div>
+                        <div>70 x 179 x 71 cm (L x H x P)</div>
+                    </div>
+                </div>
+                
+                <div class="modal-section">
+                    <h3>Fonctionnalités</h3>
+                    <div class="features-list">
+                        <div class="feature-item"><i class="fas fa-check"></i> Technologie Twin Cooling Plus</div>
+                        <div class="feature-item"><i class="fas fa-check"></i> Éclairage LED</div>
+                        <div class="feature-item"><i class="fas fa-check"></i> Contrôle électronique</div>
+                        <div class="feature-item"><i class="fas fa-check"></i> Compartiment Multi Flow</div>
+                        <div class="feature-item"><i class="fas fa-check"></i> Tiroir fraîcheur</div>
+                        <div class="feature-item"><i class="fas fa-check"></i> Porte réversible</div>
+                    </div>
+                    
+                    <h3 style="margin-top: 20px;">Conditions</h3>
+                    <div class="detail-item">
+                        <div class="detail-label">Prix:</div>
+                        <div>450 000 XOF (fixe)</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Garantie:</div>
+                        <div>24 mois constructeur</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Livraison:</div>
+                        <div>Gratuite dans Ouagadougou</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Disponibilité:</div>
+                        <div>En stock</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 20px;">
+                <button class="btn btn-primary" style="padding: 15px 30px;" onclick="contactWhatsApp('Réfrigérateur Samsung 400L - Demande d\'achat')">
+                    <i class="fab fa-whatsapp"></i> Commander ce produit
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal 2 - Machine à laver Occasion -->
+    <div id="modal2" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('modal2')">&times;</span>
+            <h2>Machine à laver LG 8kg - Occasion</h2>
+            
+            <div class="modal-gallery">
+                <img src="https://via.placeholder.com/800x500?text=Machine+LG+8kg" alt="Machine à laver" class="modal-main-image" id="modal2-main">
+                <div class="modal-thumbnails">
+                    <img src="https://via.placeholder.com/300x200?text=Tableau+de+commande" alt="Commandes" class="modal-thumbnail" onclick="changeModalImage('modal2-main', this)">
+                    <img src="https://via.placeholder.com/300x200?text=Tambour" alt="Tambour" class="modal-thumbnail" onclick="changeModalImage('modal2-main', this)">
+                    <img src="https://via.placeholder.com/300x200?text=Étiquette+modèle" alt="Étiquette modèle" class="modal-thumbnail" onclick="changeModalImage('modal2-main', this)">
+                </div>
+            </div>
+            
+            <div class="modal-details">
+                <div class="modal-section">
+                    <h3>Caractéristiques techniques</h3>
+                    <div class="detail-item">
+                        <div class="detail-label">Marque:</div>
+                        <div>LG</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Modèle:</div>
+                        <div>F4J6TM1W</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Capacité:</div>
+                        <div>8 kg</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Vitesse d'essorage:</div>
+                        <div>1200 tours/minute</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Classe énergétique:</div>
+                        <div>A+++</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Type:</div>
+                        <div>Hublot (frontale)</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Année:</div>
+                        <div>2019</div>
+                    </div>
+                </div>
+                
+                <div class="modal-section">
+                    <h3>État et Fonctionnalités</h3>
+                    <div class="features-list">
+                        <div class="feature-item"><i class="fas fa-check"></i> Technologie Inverter Direct Drive</div>
+                        <div class="feature-item"><i class="fas fa-check"></i> 14 programmes</div>
+                        <div class="feature-item"><i class="fas fa-check"></i> Affichage digital</div>
+                        <div class="feature-item"><i class="fas fa-check"></i> Détection automatique de charge</div>
+                        <div class="feature-item"><i class="fas fa-check"></i> Moteur silencieux</div>
+                        <div class="feature-item"><i class="fas fa-check"></i> Départ différé</div>
+                    </div>
+                    
+                    <h3 style="margin-top: 20px;">État du produit</h3>
+                    <div class="detail-item">
+                        <div class="detail-label">État général:</div>
+                        <div>Très bon état - Peu utilisée</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Fonctionnement:</div>
+                        <div>Parfaite - Testée par nos techniciens</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Garantie:</div>
+                        <div>3 mois sur pièces</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Accessoires:</div>
+                        <div>Manuel d'utilisation, tuyau d'évacuation</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 20px;">
+                <button class="btn btn-primary" style="padding: 15px 30px;" onclick="contactWhatsApp('Machine LG 8kg Occasion - Demande d\'achat')">
+                    <i class="fab fa-whatsapp"></i> Commander ce produit
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal 3 - Cuisinière Neuf -->
+    <div id="modal3" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('modal3')">&times;</span>
+            <h2>Cuisinière Gaz/Élec Bosch - Neuf</h2>
+            
+            <div class="modal-gallery">
+                <img src="https://via.placeholder.com/800x500?text=Cuisinière+Bosch" alt="Cuisinière" class="modal-main-image" id="modal3-main">
+                <div class="modal-thumbnails">
+                    <img src="https://via.placeholder.com/300x200?text=Plaques" alt="Plaques" class="modal-thumbnail" onclick="changeModalImage('modal3-main', this)">
+                    <img src="https://via.placeholder.com/300x200?text=Four" alt="Four" class="modal-thumbnail" onclick="changeModalImage('modal3-main', this)">
+                    <img src="https://via.placeholder.com/300x200?text=Commandes" alt="Commandes" class="modal-thumbnail" onclick="changeModalImage('modal3-main', this)">
+                </div>
+            </div>
+            
+            <div class="modal-details">
+                <div class="modal-section">
+                    <h3>Caractéristiques techniques</h3>
+                    <div class="detail-item">
+                        <div class="detail-label">Marque:</div>
+                        <div>Bosch</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Modèle:</div>
+                        <div>PPS641B1AE</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Type:</div>
+                        <div>Gaz (plaques) / Électrique (four)</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Plaques:</div>
+                        <div>4 feux gaz (dont 1 triple couronne)</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Four:</div>
+                        <div>Électrique 65L - Classe A</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Dimensions:</div>
+                        <div>60 x 85 x 60 cm (L x H x P)</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Couleur:</div>
+                        <div>Inox</div>
+                    </div>
+                </div>
+                
+                <div class="modal-section">
+                    <h3>Fonctionnalités</h3>
+                    <div class="features-list">
+                        <div class="feature-item"><i class="fas fa-check"></i> Four à convection naturelle</div>
+                        <div class="feature-item"><i class="fas fa-check"></i> Éclairage du four</div>
+                        <div class="feature-item"><i class="fas fa-check"></i> Minuterie 60 minutes</div>
+                        <div class="feature-item"><i class="fas fa-check"></i> Thermostat réglable</div>
+                        <div class="feature-item"><i class="fas fa-check"></i> Grille de refroidissement</div>
+                        <div class="feature-item"><i class="fas fa-check"></i> Porte froide</div>
+                    </div>
+                    
+                    <h3 style="margin-top: 20px;">Conditions</h3>
+                    <div class="detail-item">
+                        <div class="detail-label">Prix:</div>
+                        <div>325 000 XOF</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Garantie:</div>
+                        <div>12 mois constructeur</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Livraison:</div>
+                        <div>Gratuite dans un rayon de 50km</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Installation:</div>
+                        <div>Optionnelle (+15 000 XOF)</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 20px;">
+                <button class="btn btn-primary" style="padding: 15px 30px;" onclick="contactWhatsApp('Cuisinière Bosch - Demande d\'achat')">
+                    <i class="fab fa-whatsapp"></i> Commander ce produit
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Les autres modals (4, 5, 6) suivent le même modèle -->
+    
+    <script>
+        // Filtrage des produits
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                
+                const filter = this.dataset.filter;
+                document.querySelectorAll('.product-card').forEach(card => {
+                    if (filter === 'all') {
+                        card.style.display = 'block';
+                    } else {
+                        const categories = card.dataset.category.split(' ');
+                        if (categories.includes(filter)) {
+                            card.style.display = 'block';
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    }
+                });
+            });
+        });
+        
+        // Gestion des modals
+        function openModal(modalId) {
+            document.getElementById(modalId).style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+        
+        function changeModalImage(mainImageId, thumbnail) {
+            document.getElementById(mainImageId).src = thumbnail.src;
+        }
+        
+        // Contact WhatsApp
+        function contactWhatsApp(productName) {
+            const message = encodeURIComponent(`Bonjour, je suis intéressé par le produit suivant : ${productName}. Pouvez-vous me fournir plus d'informations ?`);
+            window.open(`https://wa.me/22605585868?text=${message}`);
+        }
+        
+        // Fermer modal en cliquant en dehors
+        window.onclick = function(event) {
+            if (event.target.className === 'modal') {
+                event.target.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }
+        }
+    </script>
+</body>
+</html>

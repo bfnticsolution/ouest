@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parcelle 360m² à Banfora | OUEST DEAL</title>
+    <style>
+        :root {
+            --primary: #FF6B00;
+            --secondary: #005F73;
+            --light: #f8f9fa;
+            --dark: #212529;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        .product-card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .gallery {
+            position: relative;
+        }
+        
+        .main-image {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+        }
+        
+        .thumbnails {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            padding: 15px;
+        }
+        
+        .thumbnail {
+            height: 80px;
+            width: 100%;
+            object-fit: cover;
+            cursor: pointer;
+            border: 2px solid transparent;
+            border-radius: 5px;
+        }
+        
+        .thumbnail:hover {
+            border-color: var(--primary);
+        }
+        
+        .details {
+            padding: 25px;
+        }
+        
+        .title {
+            color: var(--secondary);
+            margin-bottom: 5px;
+            font-size: 1.8rem;
+        }
+        
+        .location {
+            display: flex;
+            align-items: center;
+            color: #666;
+            margin-bottom: 20px;
+        }
+        
+        .price {
+            font-size: 2rem;
+            color: var(--primary);
+            margin: 20px 0;
+            font-weight: bold;
+        }
+        
+        .price small {
+            font-size: 1rem;
+            color: #666;
+        }
+        
+        .badge {
+            background: var(--primary);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            display: inline-block;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+        }
+        
+        .features {
+            margin: 25px 0;
+        }
+        
+        .feature {
+            display: flex;
+            margin-bottom: 12px;
+        }
+        
+        .feature-icon {
+            color: var(--primary);
+            width: 25px;
+        }
+        
+        .specs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 30px 0;
+        }
+        
+        .spec-item strong {
+            display: block;
+            color: #555;
+            margin-bottom: 5px;
+        }
+        
+        .actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        
+        .btn {
+            padding: 15px;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .btn-secondary {
+            background: var(--secondary);
+            color: white;
+        }
+        
+        .btn i {
+            margin-right: 10px;
+        }
+        
+        .seller {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 30px;
+        }
+        
+        .seller-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .seller-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 15px;
+            border: 2px solid var(--primary);
+        }
+        
+        @media (max-width: 768px) {
+            .specs, .actions {
+                grid-template-columns: 1fr;
+            }
+            
+            .main-image {
+                height: 250px;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="product-card">
+        <!-- Galerie -->
+        <div class="gallery">
+            <img id="mainImage" src="https://maps.googleapis.com/maps/api/staticmap?center=10.6333,-4.7667&zoom=15&size=800x400&maptype=hybrid&markers=color:red%7C10.6333,-4.7667&key=YOUR_API_KEY" alt="Localisation parcelle Banfora" class="main-image">
+            <div class="thumbnails">
+                <img src="https://via.placeholder.com/300x200?text=Vue+Parcelle" alt="Vue de la parcelle" class="thumbnail" onclick="changeImage(this)">
+                <img src="https://via.placeholder.com/300x200?text=Accès" alt="Accès à la parcelle" class="thumbnail" onclick="changeImage(this)">
+                <img src="https://via.placeholder.com/300x200?text=Cadastre" alt="Plan cadastral" class="thumbnail" onclick="changeImage(this)">
+                <img src="https://via.placeholder.com/300x200?text=Environnement" alt="Environnement" class="thumbnail" onclick="changeImage(this)">
+            </div>
+        </div>
+        
+        <!-- Détails -->
+        <div class="details">
+            <h1 class="title">Parcelle Terrain 360m² à Banfora</h1>
+            <div class="location">
+                <i class="fas fa-map-marker-alt"></i> 
+                <span>Secteur N°7, Banfora - Burkina Faso</span>
+            </div>
+            
+            <span class="badge">Titre foncier disponible</span>
+            
+            <div class="price">8 000 000 FCFA <small>(22 222 FCFA/m²)</small></div>
+            
+            <div class="features">
+                <div class="feature">
+                    <div class="feature-icon"><i class="fas fa-ruler-combined"></i></div>
+                    <div>Superficie : 360m² (18m x 20m)</div>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon"><i class="fas fa-road"></i></div>
+                    <div>Accès : Route laterite stabilisée (4m de large)</div>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon"><i class="fas fa-tint"></i></div>
+                    <div>Eau : Branchement possible au réseau SODECI</div>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon"><i class="fas fa-bolt"></i></div>
+                    <div>Électricité : Poteau à moins de 50m</div>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon"><i class="fas fa-vector-square"></i></div>
+                    <div>Bornage : Terrain déjà borné et géolocalisé</div>
+                </div>
+            </div>
+            
+            <div class="specs">
+                <div class="spec-item">
+                    <strong>Type de sol</strong>
+                    <span>Argilo-sableux (bonne portance)</span>
+                </div>
+                <div class="spec-item">
+                    <strong>Pente</strong>
+                    <span>Terrain plat (dénivelé < 1%)</span>
+                </div>
+                <div class="spec-item">
+                    <strong>Orientation</strong>
+                    <span>Nord-Est / Sud-Ouest</span>
+                </div>
+                <div class="spec-item">
+                    <strong>Urbanisme</strong>
+                    <span>Zone résidentielle (construction R+2 autorisée)</span>
+                </div>
+                <div class="spec-item">
+                    <strong>Vocation</strong>
+                    <span>Habitation ou commerce de proximité</span>
+                </div>
+                <div class="spec-item">
+                    <strong>Environnement</strong>
+                    <span>Proche école primaire et marché</span>
+                </div>
+            </div>
+            
+            <div class="actions">
+                <button class="btn btn-primary" onclick="contactPhone()">
+                    <i class="fas fa-phone"></i> Appeler le vendeur
+                </button>
+                <button class="btn btn-secondary" onclick="contactWhatsApp()">
+                    <i class="fab fa-whatsapp"></i> Envoyer message
+                </button>
+            </div>
+            
+            <!-- Vendeur -->
+            <div class="seller">
+                <div class="seller-header">
+                    <img src="https://via.placeholder.com/150?text=Propriétaire" alt="Propriétaire" class="seller-avatar">
+                    <div>
+                        <h3>Propriétaire Direct</h3>
+                        <p><i class="fas fa-check-circle" style="color: green;"></i> Vérifié par OUEST DEAL</p>
+                    </div>
+                </div>
+                <p>Je vends cette parcelle familiale pour regroupement de terrain. Titre foncier disponible immédiatement. Possibilité de visiter sur rendez-vous.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Changement d'image
+        function changeImage(element) {
+            document.getElementById('mainImage').src = element.src;
+        }
+        
+        // Contact
+        function contactPhone() {
+            alert("Contactez le propriétaire au : +226 XX XX XX XX");
+        }
+        
+        function contactWhatsApp() {
+            const message = encodeURIComponent("Bonjour, je suis intéressé par votre parcelle de 360m² à Banfora (Réf: SECTEUR7-BANFORA)");
+            window.open(`https://wa.me/226XXXXXXXXX?text=${message}`);
+        }
+        
+        // API Google Maps (à activer)
+        function initMap() {
+            // À implémenter avec une clé API valide
+        }
+    </script>
+</body>
+</html>
