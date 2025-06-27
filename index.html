@@ -4,11 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OUEST DEAL | Vente & Location en Afrique de l'Ouest</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         /* CSS Global */
         :root {
             --primary: #FF6B00;
-            --secondary: #005F73;
+            --secondary: #2b77e7;
             --light: #f8f9fa;
             --dark: #212529;
             --success: #28a745;
@@ -32,7 +33,7 @@
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             position: sticky;
             top: 0;
-            z-index: 100;
+            z-index: 1000;
         }
         
         .navbar {
@@ -42,6 +43,7 @@
             padding: 1rem 5%;
             max-width: 1400px;
             margin: 0 auto;
+            position: relative;
         }
         
         .logo {
@@ -62,6 +64,7 @@
         .nav-links {
             display: flex;
             list-style: none;
+            transition: all 0.3s ease;
         }
         
         .nav-links li {
@@ -87,9 +90,27 @@
             font-weight: bold;
         }
         
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 30px;
+            height: 21px;
+            cursor: pointer;
+        }
+        
+        .menu-toggle span {
+            display: block;
+            height: 3px;
+            width: 100%;
+            background-color: var(--dark);
+            border-radius: 3px;
+            transition: all 0.3s ease;
+        }
+        
         /* Hero Section */
         .hero {
-            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://via.placeholder.com/1920x600');
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://www2.0zz0.com/2025/06/27/08/377184974.png');
             background-size: cover;
             background-position: center;
             height: 60vh;
@@ -395,23 +416,31 @@
         }
         
         /* Responsive */
-        @media (max-width: 768px) {
-            .navbar {
-                flex-direction: column;
-                padding: 1rem;
-            }
-            
-            .logo {
-                margin-bottom: 1rem;
-            }
-            
+        @media (max-width: 1024px) {
             .nav-links {
-                width: 100%;
-                justify-content: space-around;
+                position: fixed;
+                top: 80px;
+                left: -100%;
+                width: 80%;
+                height: calc(100vh - 80px);
+                background-color: white;
+                flex-direction: column;
+                align-items: center;
+                padding: 2rem 0;
+                box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+                z-index: 999;
+            }
+            
+            .nav-links.active {
+                left: 0;
             }
             
             .nav-links li {
-                margin-left: 0;
+                margin: 1rem 0;
+            }
+            
+            .menu-toggle {
+                display: flex;
             }
             
             .hero {
@@ -436,6 +465,58 @@
                 border-radius: 5px;
                 padding: 0.8rem;
             }
+            
+            .product-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 1rem;
+            }
+            
+            .logo h1 {
+                font-size: 1.2rem;
+            }
+            
+            .hero h2 {
+                font-size: 1.8rem;
+            }
+            
+            .hero p {
+                font-size: 1rem;
+            }
+            
+            .section-title h2 {
+                font-size: 1.5rem;
+            }
+            
+            .product-info h3 {
+                font-size: 1rem;
+            }
+            
+            .product-price {
+                font-size: 1.1rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .logo img {
+                height: 40px;
+            }
+            
+            .hero h2 {
+                font-size: 1.5rem;
+            }
+            
+            .category-grid, .product-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -445,16 +526,24 @@
     <header>
         <nav class="navbar">
             <div class="logo">
-                <img src="https://via.placeholder.com/50x50" alt="Ouest Deal Logo">
+                <img src="image/logo.png" alt="Ouest Deal Logo">
                 <h1>OUEST DEAL</h1>
             </div>
-            <ul class="nav-links">
-                <li><a href="#">Accueil</a></li>
-                <li><a href="immo/immo.html">Immobilier</a></li>
-                <li><a href="Vente/Vehicule/vehicule.html">Véhicules</a></li>
-                <li><a href="electro/electro.html">Électroménager</a></li>
-                <li><a href="agricol/agricol.html">Terrains</a></li>
-                <li><a href="#" class="cta-button">Publier une annonce</a></li>
+            
+            <div class="menu-toggle" id="mobile-menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            
+            <ul class="nav-links" id="nav-links">
+               <li><a href="#"><i class="fas fa-home"></i> Accueil</a></li>
+<li><a href="immo/immo.html"><i class="fas fa-building"></i> Immobilier</a></li>
+<li><a href="Vente/Vehicule/vehicule.html"><i class="fas fa-car"></i> Véhicules</a></li>
+<li><a href="electro/electro.html"><i class="fas fa-blender"></i> Électroménager</a></li>
+<li><a href="agricol/agricol.html"><i class="fas fa-tractor"></i> Terrains</a></li>
+<li><a href="electronique/electronique.html"><i class="fas fa-laptop"></i> Electronique</a></li>
+<li><a href="#" class="cta-button"><i class="fas fa-plus-circle"></i> Publier une annonce</a></li>
             </ul>
         </nav>
     </header>
@@ -467,63 +556,6 @@
             <div class="search-bar">
                 <input type="text" placeholder="Rechercher un produit, un service...">
                 <button><i class="fas fa-search"></i></button>
-            </div>
-        </div>
-    </section>
-
-    <!-- Catégories -->
-    <section class="categories">
-        <div class="section-title">
-            <h2>Nos Catégories</h2>
-            <p>Parcourez nos principales catégories de produits</p>
-        </div>
-        <div class="category-grid">
-            <!-- Carte Catégorie 1 -->
-            <div class="category-card">
-                <div class="category-img">
-                    <img src="https://via.placeholder.com/300x180" alt="Immobilier">
-                </div>
-                <div class="category-info">
-                    <h3>Immobilier</h3>
-                    <p>Maisons, appartements, terrains à vendre ou louer</p>
-                    <a href="immo/immo.html" class="category-link">Voir plus <i class="fas fa-arrow-right"></i></a>
-                </div>
-            </div>
-            
-            <!-- Carte Catégorie 2 -->
-            <div class="category-card">
-                <div class="category-img">
-                    <img src="https://acnews.blob.core.windows.net/imgnews/large/NAZ_bef02fa6e8ef4ec78fc0f3ca5e8090da.jpg" alt="Véhicules">
-                </div>
-                <div class="category-info">
-                    <h3>Véhicules</h3>
-                    <p>Voitures, motos, utilitaires neufs ou d'occasion</p>
-                    <a href="Vente/Vehicule/vehicule.html" class="category-link">Voir plus <i class="fas fa-arrow-right"></i></a>
-                </div>
-            </div>
-            
-            <!-- Carte Catégorie 3 -->
-            <div class="category-card">
-                <div class="category-img">
-                    <img src="https://www.materiel-electromenager.fr/wp-content/uploads/2017/11/entretien_appareils.jpg" alt="Électroménager">
-                </div>
-                <div class="category-info">
-                    <h3>Électroménager</h3>
-                    <p>Réfrigérateurs, climatiseurs, cuisinières et plus</p>
-                    <a href="electro/electro.html" class="category-link">Voir plus <i class="fas fa-arrow-right"></i></a>
-                </div>
-            </div>
-            
-            <!-- Carte Catégorie 4 -->
-            <div class="category-card">
-                <div class="category-img">
-                    <img src="https://via.placeholder.com/300x180" alt="Terrains Agricoles">
-                </div>
-                <div class="category-info">
-                    <h3>Terrains Agricoles</h3>
-                    <p>Champs fertiles pour vos projets agricoles</p>
-                    <a href="agricol/agricol.html" class="category-link">Voir plus <i class="fas fa-arrow-right"></i></a>
-                </div>
             </div>
         </div>
     </section>
@@ -549,7 +581,7 @@
                     </div>
                     <div class="product-price">150 000 XOF/mois</div>
                     <div class="product-actions">
-                        <button class="view-btn">Voir détails</button>
+                        <a href="/produits/maison-ouaga-2000" class="view-btn">Voir détails</a>
                         <button class="contact-btn"><i class="fas fa-phone-alt"></i> Appeler</button>
                     </div>
                 </div>
@@ -569,7 +601,7 @@
                     </div>
                     <div class="product-price">8 500 000 XOF</div>
                     <div class="product-actions">
-                        <button class="view-btn">Voir détails</button>
+                        <a href="/produits/toyota-hilux-2018" class="view-btn">Voir détails</a>
                         <button class="contact-btn"><i class="fas fa-phone-alt"></i> Appeler</button>
                     </div>
                 </div>
@@ -589,7 +621,7 @@
                     </div>
                     <div class="product-price">425 000 XOF</div>
                     <div class="product-actions">
-                        <button class="view-btn">Voir détails</button>
+                        <a href="/produits/refrigerateur-samsung" class="view-btn">Voir détails</a>
                         <button class="contact-btn"><i class="fas fa-phone-alt"></i> Appeler</button>
                     </div>
                 </div>
@@ -609,9 +641,76 @@
                     </div>
                     <div class="product-price">10 000 000 XOF</div>
                     <div class="product-actions">
-                        <button class="view-btn">Voir détails</button>
+                        <a href="/produits/terrain-koubri" class="view-btn">Voir détails</a>
                         <button class="contact-btn"><i class="fas fa-phone-alt"></i> Appeler</button>
                     </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Catégories -->
+    <section class="categories">
+        <div class="section-title">
+            <h2>Nos Catégories</h2>
+            <p>Parcourez nos principales catégories de produits</p>
+        </div>
+        <div class="category-grid">
+            <!-- Carte Catégorie 1 -->
+            <div class="category-card">
+                <div class="category-img">
+                    <img src="image/immo cover.jpg" alt="Immobilier">
+                </div>
+                <div class="category-info">
+                    <h3>Immobilier</h3>
+                    <p>Maisons, appartements, terrains à vendre ou louer</p>
+                    <a href="immo/immo.html" class="category-link">Voir plus <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+            
+            <!-- Carte Catégorie 2 -->
+            <div class="category-card">
+                <div class="category-img">
+                    <img src="image/auto cover.jpg" alt="Véhicules">
+                </div>
+                <div class="category-info">
+                    <h3>Véhicules</h3>
+                    <p>Voitures, motos, utilitaires neufs ou d'occasion</p>
+                    <a href="Vente/Vehicule/vehicule.html" class="category-link">Voir plus <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+            
+            <!-- Carte Catégorie 3 -->
+            <div class="category-card">
+                <div class="category-img">
+                    <img src="image/electromenager cover.jpg" alt="Électroménager">
+                </div>
+                <div class="category-info">
+                    <h3>Électroménager</h3>
+                    <p>Réfrigérateurs, climatiseurs, cuisinières et plus</p>
+                    <a href="electro/electro.html" class="category-link">Voir plus <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+            
+             <div class="category-card">
+                <div class="category-img">
+                    <img src="image/electronique cover.jpg" alt="Électronique">
+                </div>
+                <div class="category-info">
+                    <h3>Electronique</h3>
+                    <p>Ordinateur, Smartphone, Disque dure et plus</p>
+                    <a href="electronique/electronique.html" class="category-link">Voir plus <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+            <!-- Carte Catégorie 4 -->
+            <div class="category-card">
+                <div class="category-img">
+                    <img src="image/terrain cover.jpg" alt="Terrains Agricoles">
+                </div>
+                <div class="category-info">
+                    <h3>Terrains Agricoles</h3>
+                    <p>Champs fertiles pour vos projets agricoles</p>
+                    <a href="agricol/agricol.html" class="category-link">Voir plus <i class="fas fa-arrow-right"></i></a>
                 </div>
             </div>
         </div>
@@ -661,7 +760,7 @@
             </div>
         </div>
         <div class="copyright">
-            <p>&copy; 2024 OUEST DEAL. Tous droits réservés.</p>
+            <p>&copy; 2025 OUEST DEAL. Tous droits réservés.</p>
         </div>
     </footer>
 
@@ -669,6 +768,42 @@
     <script>
         // Fonctionnalité de base pour le site
         document.addEventListener('DOMContentLoaded', function() {
+            // Menu mobile
+            const mobileMenu = document.getElementById('mobile-menu');
+            const navLinks = document.getElementById('nav-links');
+            
+            mobileMenu.addEventListener('click', function() {
+                this.classList.toggle('active');
+                navLinks.classList.toggle('active');
+                
+                // Animation des barres du menu hamburger
+                const spans = this.querySelectorAll('span');
+                if (navLinks.classList.contains('active')) {
+                    spans[0].style.transform = 'rotate(45deg) translate(5px, 5px)';
+                    spans[1].style.opacity = '0';
+                    spans[2].style.transform = 'rotate(-45deg) translate(5px, -5px)';
+                } else {
+                    spans[0].style.transform = 'none';
+                    spans[1].style.opacity = '1';
+                    spans[2].style.transform = 'none';
+                }
+            });
+            
+            // Fermer le menu quand on clique sur un lien
+            const navItems = document.querySelectorAll('.nav-links a');
+            navItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    if (window.innerWidth <= 1024) {
+                        mobileMenu.classList.remove('active');
+                        navLinks.classList.remove('active');
+                        const spans = mobileMenu.querySelectorAll('span');
+                        spans[0].style.transform = 'none';
+                        spans[1].style.opacity = '1';
+                        spans[2].style.transform = 'none';
+                    }
+                });
+            });
+            
             // Animation des cartes au chargement
             const cards = document.querySelectorAll('.category-card, .product-card');
             cards.forEach((card, index) => {
@@ -691,7 +826,7 @@
             const contactButtons = document.querySelectorAll('.contact-btn');
             contactButtons.forEach(button => {
                 button.addEventListener('click', function() {
-                    alert('Contactez-nous au +226 XX XX XX XX');
+                    alert('Contactez-nous au +226 69 69 69 24');
                 });
             });
         });
